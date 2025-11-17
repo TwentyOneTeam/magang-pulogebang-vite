@@ -1,8 +1,9 @@
 
   {
-      "name": "Mobile-First Internship Info System",
+      "name": "magang-pulogebang-vite",
       "version": "0.1.0",
       "private": true,
+      "description": "Front-end website for the Internship Program application process.",
       "dependencies": {
           "@radix-ui/react-accordion": "^1.2.3",
           "@radix-ui/react-alert-dialog": "^1.1.6",
