@@ -1,7 +1,7 @@
 <h1 align="center">Sistem Informasi Magang</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/TwentyOneTeam/magang-pulogebang-vite/main/.github/assets/twentyonelogo.png" alt="TwentyOne Logo" width="200">
+  <img src=".github/assets/twentyonelogo.png" alt="TwentyOne Logo" width="200">
 </p>
 
 <p align="center">
@@ -109,10 +109,10 @@ The optimized build output will be in the `dist/` folder.
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/TwentyOneTeam/magang-pulogebang-vite/main/.github/assets/homepage.png" alt="Home Page" width="600">
+  <img src=".github/assets/homepage.png" alt="Home Page" width="600">
 </p>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/TwentyOneTeam/magang-pulogebang-vite/main/.github/assets/informationpage.png" alt="Information Page" width="600">
+  <img src=".github/assets/informationpage.png" alt="Information Page" width="600">
 </p>
 
 ---
