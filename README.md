@@ -3,6 +3,7 @@
 <p align="center">
   <img src=".github/assets/twentyonelogo.png" alt="TwentyOne Logo" width="200">
 </p>
+<h4 align="center">by TwentyOne Team</h1>
 
 <p align="center">
   <a href="https://maps.app.goo.gl/7KvGrbhztdbDVZbz6">
