@@ -137,7 +137,7 @@ export function Chatbot({ onNavigate }: ChatbotProps) {
               <Bot className="w-8 h-8 text-[#004AAD]" />
             </div>
             <div>
-              <h1 className="text-white mb-2">Chatbot AI</h1>
+              <h1 className="text-white mb-2 text-[20px] font-bold">Chatbot AI</h1>
               <p className="text-lg text-gray-100">
                 Asisten virtual untuk informasi magang 24/7
               </p>

@@ -177,7 +177,7 @@ export function InternshipInfo({ onNavigate }: InternshipInfoProps) {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#004AAD] to-[#0066CC] text-white py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-white mb-4">Informasi Magang</h1>
+          <h1 className="text-white mb-4 font-bold text-[20px]">Informasi Magang</h1>
           <p className="text-lg text-gray-100 max-w-3xl">
             Temukan semua informasi yang Anda butuhkan tentang program magang di Kelurahan Pulo Gebang
           </p>

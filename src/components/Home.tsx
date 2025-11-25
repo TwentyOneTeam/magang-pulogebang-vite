@@ -1,4 +1,5 @@
 import { FileText, ClipboardList, CheckCircle, Bot, ArrowRight, Users, Calendar, FileCheck } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Button } from './ui/button';
@@ -12,6 +13,27 @@ interface HomeProps {
 }
 
 export function Home({ onNavigate }: HomeProps) {
+  // Daftar foto yang akan berganti-ganti
+  const heroImages = [
+    "https://images.unsplash.com/photo-1707598973296-255b29445512?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjBpbnRlcm4lMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYyNjY4NzI4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-rotate gambar setiap 5 detik
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % heroImages.length
+      );
+    }, 5000); // 5000ms = 5 detik
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
   const features = [
     {
       icon: FileText,
@@ -75,7 +97,7 @@ export function Home({ onNavigate }: HomeProps) {
         <div className="container mx-auto px-4 py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
-              <h1 className="text-white">Sistem Informasi Magang<br />Kelurahan Pulo Gebang</h1>
+              <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold">Sistem Informasi Magang<br />Kelurahan Pulo Gebang</h1>
               <p className="text-lg md:text-xl text-gray-100">
                 Platform digital untuk pendaftaran dan informasi magang yang transparan, efisien, dan mudah diakses
               </p>
@@ -100,7 +122,7 @@ export function Home({ onNavigate }: HomeProps) {
             </div>
             <div className="hidden lg:block">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1707598973296-255b29445512?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjBpbnRlcm4lMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYyNjY4NzI4fDA&ixlib=rb-4.1.0&q=80&w=1080"
+                src={heroImages[currentImageIndex]}
                 alt="Magang di Kelurahan"
                 className="rounded-lg shadow-2xl w-full h-[400px] object-cover"
               />

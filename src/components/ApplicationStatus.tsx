@@ -134,7 +134,7 @@ export function ApplicationStatus({ onNavigate }: ApplicationStatusProps) {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#004AAD] to-[#0066CC] text-white py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-white mb-4">Status Pengajuan</h1>
+          <h1 className="text-white mb-4 text-[20px] font-bold">Status Pengajuan</h1>
           <p className="text-lg text-gray-100 max-w-3xl">
             Pantau perkembangan pengajuan magang Anda secara real-time
           </p>
