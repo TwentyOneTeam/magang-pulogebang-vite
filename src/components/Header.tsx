@@ -63,8 +63,12 @@ export function Header({ onNavigate, currentPage = 'home' }: HeaderProps) {
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => handleNavigate('home')}
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-[#004AAD] rounded-lg flex items-center justify-center">
-              <span className="text-white">PG</span>
+            <div className="w-10 h-10 md:w-12 md:h-12">
+              <img
+              src="/logo.svg"
+              alt="Logo DKI Jakarta"
+              className="w-full h-full object-contain"
+              />
             </div>
             <div className="hidden sm:block">
               <h1 className="text-[#004AAD]">Kelurahan Pulo Gebang</h1>
