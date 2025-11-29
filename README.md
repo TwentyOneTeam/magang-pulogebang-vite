@@ -3,7 +3,7 @@
 <p align="center">
   <img src=".github/assets/twentyonelogo.png" alt="TwentyOne Logo" width="200">
 </p>
-<h4 align="center">by TwentyOne Team</h1>
+<h4 align="center">by TwentyOne Team</h4>
 
 <p align="center">
   <a href="https://maps.app.goo.gl/7KvGrbhztdbDVZbz6">
@@ -61,10 +61,10 @@
 
 ## 🛠️ Tech Stack
 
-- **TypeScript (TSX)**
-- **Vite**
-- **React**
-- **TailwindCSS**
+- **TypeScript (TSX)** (v5.9.3)
+- **Vite** (v7.2.4)
+- **React** (v18.3.1)
+- **TailwindCSS** (v4.1.17)
 
 ---
 
@@ -94,7 +94,7 @@ npm run dev
 # or
 yarn dev
 ```
-Visit [http://localhost:5173](http://localhost:5173) to view the app in your browser.
+Visit [http://localhost:3000](http://localhost:3000) to view the app in your browser.
 
 ### 📦 Building for Production
 
@@ -138,7 +138,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for more 
 
 ## 🙏 Acknowledgements
 
-- [Vite](https://vitejs.dev/)
+- [Vite](https://vite.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - And all contributors who help improve this project.
 
