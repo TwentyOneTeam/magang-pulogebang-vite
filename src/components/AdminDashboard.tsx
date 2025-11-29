@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from './ui/textarea';
 import { Users, CheckCircle, Clock, FileText, TrendingUp, Eye, Check, X, Plus, Mail, Phone, School, Calendar as CalendarIcon } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 type Page = 'home' | 'info' | 'registration' | 'status' | 'chatbot' | 'admin';
 
