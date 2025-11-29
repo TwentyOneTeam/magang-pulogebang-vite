@@ -24,7 +24,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 flex-shrink-0" />
-                <p className="text-sm text-gray-200">085280471981</p>
+                <p className="text-sm text-gray-200">+62 852 8047 1981</p>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 flex-shrink-0" />
@@ -38,21 +38,21 @@ export function Footer() {
             <h3 className="mb-4">Media Sosial</h3>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.facebook.com/ptsp.gebang/"
                 className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/kelurahan_pulogebang/"
                 className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://twitter.com/kel_pulogebang/"
                 className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
                 aria-label="Twitter"
               >
