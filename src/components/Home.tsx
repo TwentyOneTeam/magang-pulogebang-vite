@@ -15,10 +15,10 @@ interface HomeProps {
 export function Home({ onNavigate }: HomeProps) {
   // Daftar foto yang akan berganti-ganti
   const heroImages = [
-    "public/images/foto1.webp",
-    "public/images/foto2.webp",
-    "public/images/foto3.webp",
-    "public/images/foto4.webp"
+    "/images/foto1.webp",
+    "/images/foto2.webp",
+    "/images/foto3.webp",
+    "/images/foto4.webp"
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
