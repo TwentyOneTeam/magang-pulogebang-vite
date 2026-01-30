@@ -3,7 +3,15 @@
  * Centralized API calls untuk komunikasi dengan backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Get base URL - if VITE_API_URL is set, use it directly (should be without trailing slash)
+// Otherwise use localhost with /api
+const getApiBaseUrl = () => {
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  // Ensure no trailing slash
+  return baseUrl.replace(/\/$/, '');
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Helper untuk get token dari localStorage
 const getToken = (): string | null => {
@@ -21,7 +29,12 @@ const getAuthHeaders = () => {
 
 // Generic request handler
 const request = async (endpoint: string, options: RequestInit = {}) => {
-  const url = `${API_BASE_URL}${endpoint}`;
+  // Normalize endpoint - ensure it starts with /api
+  let normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (!normalizedEndpoint.startsWith('/api')) {
+    normalizedEndpoint = `/api${normalizedEndpoint}`;
+  }
+  const url = `${API_BASE_URL}${normalizedEndpoint}`;
   
   try {
     const response = await fetch(url, {
