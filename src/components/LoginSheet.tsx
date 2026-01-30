@@ -4,16 +4,16 @@ import { Label } from './ui/label';
 import { Button } from './ui/button';
 import { Alert, AlertDescription } from './ui/alert';
 import { useAuth } from './AuthContext';
-import { Lock, Mail, AlertCircle, UserPlus } from 'lucide-react';
+import { Lock, Mail, AlertCircle, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-
-interface LoginSheetProps {
+import { OTPVerificationModal } from './OTPVerificationModal';
+import { ForgotPasswordModal } from './ForgotPasswordModal';interface LoginSheetProps {
   onSuccess?: () => void;
   onClose?: () => void;
 }
 
 export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
@@ -22,14 +22,19 @@ export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    setTimeout(() => {
-      const loginSuccess = login(loginEmail, loginPassword);
+    try {
+      const loginSuccess = await login(loginEmail, loginPassword);
       
       if (loginSuccess) {
         setSuccess('Login berhasil!');
@@ -40,29 +45,65 @@ export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
       } else {
         setError('Email atau password salah. Silakan coba lagi.');
       }
+    } catch (err) {
+      setError('Terjadi kesalahan. Silakan coba lagi.');
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    setTimeout(() => {
-      // Simulate signup - in real app, this would create a new user
-      // For demo, we'll just show success and ask them to login
-      setSuccess('Pendaftaran berhasil! Silakan login dengan akun Anda.');
-      setSignupEmail('');
-      setSignupPassword('');
-      setSignupName('');
-      setLoading(false);
+    try {
+      const result = await register(signupName, signupEmail, signupPassword);
       
-      // Switch to login tab after 1 second
-      setTimeout(() => {
-        setSuccess('');
-      }, 2000);
-    }, 500);
+      if (result.success) {
+        // Jika memerlukan verifikasi OTP
+        if (result.requiresVerification) {
+          setPendingEmail(signupEmail);
+          setShowOTPModal(true);
+          // Reset form
+          setSignupName('');
+          setSignupEmail('');
+          setSignupPassword('');
+          setLoading(false);
+          return;
+        }
+
+        // Jika tidak memerlukan verifikasi (overwrite case)
+        setSuccess('Pendaftaran berhasil! Anda akan diarahkan...');
+        setTimeout(() => {
+          if (onSuccess) onSuccess();
+          if (onClose) onClose();
+        }, 1000);
+      } else {
+        setError('Pendaftaran gagal. Silakan coba lagi.');
+      }
+    } catch (err) {
+      setError('Terjadi kesalahan. Silakan coba lagi.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOTPSuccess = () => {
+    setShowOTPModal(false);
+    setPendingEmail('');
+    setSuccess('Email berhasil diverifikasi! Anda akan diarahkan...');
+    setTimeout(() => {
+      if (onSuccess) onSuccess();
+      if (onClose) onClose();
+    }, 1000);
+  };
+
+  const handleOTPGoBack = () => {
+    setShowOTPModal(false);
+    setPendingEmail('');
+    // Restore signup form
+    setSignupEmail(pendingEmail);
   };
 
   return (
@@ -116,13 +157,33 @@ export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="login-password"
-                  type="password"
+                  type={showLoginPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 pr-10"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showLoginPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-xs text-[#004AAD] hover:text-[#003A8C] hover:underline"
+                >
+                  Lupa Password?
+                </button>
               </div>
             </div>
 
@@ -134,19 +195,6 @@ export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
               {loading ? 'Memproses...' : 'Masuk'}
             </Button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-4 pt-4 border-t">
-            <p className="text-xs text-gray-600 mb-2">Demo Akun:</p>
-            <div className="space-y-2 text-xs">
-              <div className="bg-[#F4F4F4] p-2 rounded">
-                <p className="text-gray-700"><strong>Admin:</strong> admin@kelurahan.com / admin123</p>
-              </div>
-              <div className="bg-[#F4F4F4] p-2 rounded">
-                <p className="text-gray-700"><strong>User:</strong> user@example.com / user123</p>
-              </div>
-            </div>
-          </div>
         </TabsContent>
 
         {/* Signup Tab */}
@@ -208,14 +256,25 @@ export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="signup-password"
-                  type="password"
-                  placeholder="Minimal 6 karakter"
+                  type={showSignupPassword ? 'text' : 'password'}
+                  placeholder="Minimal 8 karakter"
                   value={signupPassword}
                   onChange={(e) => setSignupPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 pr-10"
                   required
-                  minLength={6}
+                  minLength={8}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowSignupPassword(!showSignupPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showSignupPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
 
@@ -233,6 +292,25 @@ export function LoginSheet({ onSuccess, onClose }: LoginSheetProps) {
           </p>
         </TabsContent>
       </Tabs>
+
+      {/* OTP Verification Modal */}
+      <OTPVerificationModal
+        isOpen={showOTPModal}
+        email={pendingEmail}
+        onSuccess={handleOTPSuccess}
+        onGoBack={handleOTPGoBack}
+      />
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={showForgotPassword}
+        onSuccess={() => {
+          setShowForgotPassword(false);
+          setLoginEmail('');
+          setLoginPassword('');
+        }}
+        onGoBack={() => setShowForgotPassword(false)}
+      />
     </div>
   );
 }

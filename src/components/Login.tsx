@@ -18,21 +18,24 @@ export function Login({ onNavigate }: LoginProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    setTimeout(() => {
-      const success = login(email, password);
+    try {
+      const success = await login(email, password);
       
       if (success) {
         onNavigate('home');
       } else {
         setError('Email atau password salah. Silakan coba lagi.');
       }
+    } catch (err) {
+      setError('Terjadi kesalahan. Silakan coba lagi.');
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
@@ -102,23 +105,6 @@ export function Login({ onNavigate }: LoginProps) {
               {loading ? 'Memproses...' : 'Masuk'}
             </Button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-600 mb-3">Demo Akun:</p>
-            <div className="space-y-2 text-xs">
-              <div className="bg-[#F4F4F4] p-3 rounded-lg">
-                <p className="text-gray-700 mb-1"><strong>Admin:</strong></p>
-                <p className="text-gray-600">Email: admin@kelurahan.com</p>
-                <p className="text-gray-600">Password: admin123</p>
-              </div>
-              <div className="bg-[#F4F4F4] p-3 rounded-lg">
-                <p className="text-gray-700 mb-1"><strong>User:</strong></p>
-                <p className="text-gray-600">Email: user@example.com</p>
-                <p className="text-gray-600">Password: user123</p>
-              </div>
-            </div>
-          </div>
         </Card>
 
         <div className="text-center mt-6">
