@@ -16,22 +16,44 @@ const chatRoutes = require('./routes/chat');
 // Initialize Express
 const app = express();
 
-// Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+// Normalize FRONTEND_URL (remove trailing slash)
+const frontendUrl = process.env.FRONTEND_URL ? 
+  process.env.FRONTEND_URL.replace(/\/$/, '') : 
+  'http://localhost:3000';
+
+// CORS configuration with proper origin handling
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests without origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin matches FRONTEND_URL (with or without trailing slash)
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    const allowedOrigin = frontendUrl.replace(/\/$/, '');
+    
+    if (normalizedOrigin === allowedOrigin || 
+        process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      console.warn(`❌ CORS blocked request from: ${origin}`);
+      console.warn(`📌 Expected: ${frontendUrl}`);
+      callback(new Error('CORS not allowed'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+// Middleware
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploads folder) with CORS
-app.use('/uploads', cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}), express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', cors(corsOptions), express.static(path.join(__dirname, 'uploads')));
 
 // Welcome route
 app.get('/', (req, res) => {
