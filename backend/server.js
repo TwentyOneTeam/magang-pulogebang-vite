@@ -27,18 +27,31 @@ const corsOptions = {
     // Allow requests without origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // Check if origin matches FRONTEND_URL (with or without trailing slash)
     const normalizedOrigin = origin.replace(/\/$/, '');
     const allowedOrigin = frontendUrl.replace(/\/$/, '');
     
-    if (normalizedOrigin === allowedOrigin || 
-        process.env.NODE_ENV !== 'production') {
-      callback(null, true);
-    } else {
-      console.warn(`❌ CORS blocked request from: ${origin}`);
-      console.warn(`📌 Expected: ${frontendUrl}`);
-      callback(new Error('CORS not allowed'));
+    // Check if origin matches exactly
+    if (normalizedOrigin === allowedOrigin) {
+      return callback(null, true);
     }
+    
+    // Allow Vercel preview deployments (*.vercel.app)
+    if (normalizedOrigin.endsWith('.vercel.app') && 
+        allowedOrigin.includes('vercel.app')) {
+      console.log(`✅ CORS allowed Vercel preview: ${normalizedOrigin}`);
+      return callback(null, true);
+    }
+    
+    // Allow localhost in development
+    if (process.env.NODE_ENV !== 'production' && 
+        normalizedOrigin.includes('localhost')) {
+      return callback(null, true);
+    }
+    
+    // Reject other origins
+    console.warn(`❌ CORS blocked request from: ${origin}`);
+    console.warn(`📌 Expected: ${frontendUrl}`);
+    callback(new Error('CORS not allowed'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
