@@ -19,16 +19,10 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false, // Disable sourcemaps in production to save memory
+    sourcemap: false,
     minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console logs in production
-      },
-    },
     rollupOptions: {
       output: {
-        // Manual chunks to split large files
         manualChunks: {
           'radix-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
