@@ -5,6 +5,8 @@
  * - Create sample positions
  * 
  * Jalankan dengan: npm run init-db
+ * 
+ * Untuk Railway: Pastikan DATABASE_URL sudah di-set di environment variables
  */
 
 const bcrypt = require('bcryptjs');
@@ -17,12 +19,23 @@ const initDatabase = async () => {
   try {
     console.log('\n🚀 Starting database initialization...\n');
 
+    // Show connection info (for debugging)
+    if (process.env.DATABASE_URL) {
+      console.log('📡 Using DATABASE_URL (Railway mode)');
+    } else {
+      console.log(`📡 Using local config: ${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`);
+    }
+
     // Test connection
-    console.log('1️⃣  Testing database connection...');
+    console.log('\n1️⃣  Testing database connection...');
     const connected = await testConnection();
     
     if (!connected) {
-      console.error('❌ Cannot proceed without database connection');
+      console.error('\n❌ Cannot proceed without database connection');
+      console.error('\n💡 Troubleshooting tips:');
+      console.error('   - For Railway: Set DATABASE_URL in Environment Variables');
+      console.error('   - For local: Check DB credentials in .env file');
+      console.error('   - Make sure PostgreSQL is running');
       process.exit(1);
     }
 
