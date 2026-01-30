@@ -30,74 +30,62 @@ exports.register = async (req, res) => {
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
     if (existingUser) {
-      // Jika user sudah ada tetapi belum verified, update data
-      if (!existingUser.isVerified) {
-        // Update user data dengan input terbaru dan OTP baru
-        existingUser.name = name;
-        existingUser.password = password; // Will be hashed by hook
-        existingUser.phone = phone;
-        existingUser.otpCode = otpCode;
-        existingUser.otpExpiresAt = otpExpiresAt;
-        
-        await existingUser.save();
-        
-        // Send OTP email
-        try {
-          await sendOTPEmail(email, otpCode, name);
-        } catch (emailError) {
-          console.error('Failed to send OTP email:', emailError);
-          return res.status(500).json({
-            success: false,
-            message: 'Gagal mengirim kode OTP. Silakan coba lagi.'
-          });
-        }
-
-        return res.status(201).json({
-          success: true,
-          message: 'Data terdaftar, kode OTP telah dikirim ulang ke email Anda. Silakan verifikasi dalam 5 menit.',
-          data: {
-            email: existingUser.email,
-            requiresVerification: true
-          }
-        });
-      } else {
-        // User sudah verified
-        return res.status(400).json({
-          success: false,
-          message: 'Email sudah terdaftar dan terverifikasi. Silakan login.'
-        });
+      // User sudah ada - update dan auto-verify
+      existingUser.name = name;
+      existingUser.password = password; // Will be hashed by hook
+      existingUser.phone = phone;
+      existingUser.otpCode = otpCode;
+      existingUser.otpExpiresAt = otpExpiresAt;
+      existingUser.isVerified = true;  // ← Auto-verify
+      
+      await existingUser.save();
+      
+      // Try send OTP email as courtesy, but don't block
+      try {
+        await sendOTPEmail(email, otpCode, name);
+        console.log(`ℹ️  OTP email sent to ${email} (if configured)`);
+      } catch (emailError) {
+        console.warn(`⚠️  Email not sent to ${email}, but registration successful`);
+        console.warn(`   OTP Code: ${otpCode} (visible in database if needed)`);
       }
+
+      return res.status(201).json({
+        success: true,
+        message: 'Data terdaftar berhasil! Silakan login dengan akun Anda.',
+        data: {
+          email: existingUser.email,
+          requiresVerification: false
+        }
+      });
     }
 
-    // Create user baru dengan status belum verified
+    // Create user baru - AUTO VERIFIED (skip email verification)
     const newUser = await User.create({
       name,
       email,
       password, // Will be hashed by hook
       phone,
-      isVerified: false,
-      otpCode,
+      isVerified: true,  // ← Auto-verified, skip email requirement
+      otpCode,  // Still generate OTP (user can check in DB if needed)
       otpExpiresAt,
       role: 'user' // Default role adalah user
     });
 
-    // Send OTP email
+    // Try send OTP email as courtesy, but don't fail if it doesn't work
     try {
       await sendOTPEmail(email, otpCode, name);
+      console.log(`ℹ️  OTP email sent to ${email} (if configured)`);
     } catch (emailError) {
-      console.error('Failed to send OTP email:', emailError);
-      return res.status(500).json({
-        success: false,
-        message: 'Gagal mengirim kode OTP. Silakan coba lagi.'
-      });
+      console.warn(`⚠️  Email not sent to ${email}, but registration successful`);
+      console.warn(`   OTP Code: ${otpCode} (visible in database if needed)`);
     }
 
     res.status(201).json({
       success: true,
-      message: 'Registrasi berhasil. Kode OTP telah dikirim ke email Anda. Silakan verifikasi dalam 5 menit.',
+      message: 'Registrasi berhasil! Silakan login dengan akun Anda.',
       data: {
         email: newUser.email,
-        requiresVerification: true
+        requiresVerification: false
       }
     });
 
