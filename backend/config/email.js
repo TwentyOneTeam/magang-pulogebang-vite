@@ -1,22 +1,45 @@
 const nodemailer = require('nodemailer');
 
+// Check if email credentials are provided
+const hasEmailConfig = process.env.EMAIL_USER && process.env.EMAIL_PASSWORD;
+
 // Initialize email transporter using Gmail SMTP
-const transporter = nodemailer.createTransport({
+// Only create transporter if credentials are available
+const transporter = hasEmailConfig ? nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // Your Gmail address
-    pass: process.env.EMAIL_PASSWORD // Your Gmail App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  },
+  // Timeout settings for Railway (increased from default)
+  connectionTimeout: 5 * 60 * 1000, // 5 minutes
+  socketTimeout: 5 * 60 * 1000,     // 5 minutes
+  pool: {
+    maxConnections: 1,
+    maxMessages: 100,
+    rateDelta: 1000,
+    rateLimit: 5
   }
-});
+}) : null;
 
-// Verify connection
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('Email transporter error:', error);
-  } else {
-    console.log('Email transporter ready. Server is ready to send messages');
-  }
-});
+// Verify connection only if email is configured
+if (transporter) {
+  transporter.verify((error, success) => {
+    if (error) {
+      console.error('❌ Email configuration error:', error.message);
+      console.error('📌 Please check:');
+      console.error('   1. EMAIL_USER is set (Gmail address)');
+      console.error('   2. EMAIL_PASSWORD is Gmail App Password (not regular password)');
+      console.error('   3. Gmail account has 2FA enabled');
+      console.error('   4. Gmail account allows app passwords');
+    } else {
+      console.log('✅ Email transporter ready');
+    }
+  });
+} else {
+  console.warn('⚠️  Email not configured. OTP features will be disabled.');
+  console.warn('📌 To enable email, set EMAIL_USER and EMAIL_PASSWORD in environment variables');
+}
 
 // Generate random 6-digit OTP
 const generateOTP = () => {
@@ -25,6 +48,12 @@ const generateOTP = () => {
 
 // Send OTP email
 const sendOTPEmail = async (email, otpCode, userName = 'User', type = 'verification') => {
+  // Check if email is configured
+  if (!transporter) {
+    console.warn('⚠️  Email not configured. Cannot send OTP.');
+    throw new Error('Email service not configured. Please set EMAIL_USER and EMAIL_PASSWORD.');
+  }
+
   const currentYear = new Date().getFullYear();
   
   const emailSubjects = {
