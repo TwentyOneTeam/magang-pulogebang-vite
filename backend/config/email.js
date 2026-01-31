@@ -13,6 +13,11 @@ const transporter = hasEmailConfig ? nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
   },
+  tls: {
+    // Ini rahasianya agar tidak timeout di server cloud
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false
+  },
   // Timeout settings for Railway (increased from default)
   connectionTimeout: 5 * 60 * 1000, // 5 minutes
   socketTimeout: 5 * 60 * 1000,     // 5 minutes
