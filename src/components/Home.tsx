@@ -1,18 +1,23 @@
-import { FileText, ClipboardList, CheckCircle, Bot, ArrowRight, Users, Calendar, FileCheck } from 'lucide-react';
+import { FileText, ClipboardList, CheckCircle, Bot, ArrowRight, Users, Calendar, FileCheck, Briefcase } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { positionsAPI } from '../services/api';
 
-type Page = 'home' | 'info' | 'registration' | 'status' | 'chatbot' | 'admin';
-
-interface HomeProps {
-  onNavigate: (page: Page) => void;
+interface Position {
+  id: string;
+  title: string;
+  department: string;
+  quota: number;
+  duration: string;
+  applicant_type: string;
 }
 
-export function Home({ onNavigate }: HomeProps) {
+export function Home() {
   // Daftar foto yang akan berganti-ganti
   const heroImages = [
     "/images/foto1.webp",
@@ -21,7 +26,10 @@ export function Home({ onNavigate }: HomeProps) {
     "/images/foto4.webp"
   ];
 
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [positions, setPositions] = useState<Position[]>([]);
+  const [loadingPositions, setLoadingPositions] = useState(true);
 
   // Auto-rotate gambar setiap 5 detik
   useEffect(() => {
@@ -34,30 +42,50 @@ export function Home({ onNavigate }: HomeProps) {
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
+  // Fetch active positions from API
+  useEffect(() => {
+    const fetchPositions = async () => {
+      try {
+        setLoadingPositions(true);
+        const response = await positionsAPI.getAll({ isActive: true });
+        if (response.success && response.data) {
+          // Ambil 3 posisi pertama untuk ditampilkan di homepage
+          setPositions(response.data.slice(0, 3));
+        }
+      } catch (error) {
+        console.error('Error fetching positions:', error);
+      } finally {
+        setLoadingPositions(false);
+      }
+    };
+
+    fetchPositions();
+  }, []);
+
   const features = [
     {
       icon: FileText,
       title: 'Informasi Magang',
       description: 'Akses informasi lengkap tentang program magang',
-      page: 'info' as Page,
+      path: '/informasi-magang',
     },
     {
       icon: ClipboardList,
       title: 'Pendaftaran Online',
       description: 'Daftar magang secara online dengan mudah',
-      page: 'registration' as Page,
+      path: '/pendaftaran',
     },
     {
       icon: CheckCircle,
       title: 'Status Pengajuan',
       description: 'Pantau status pengajuan magang Anda',
-      page: 'status' as Page,
+      path: '/status-pengajuan',
     },
     {
       icon: Bot,
       title: 'Chatbot AI',
       description: 'Tanyakan informasi kapan saja dengan AI',
-      page: 'chatbot' as Page,
+      path: '/chatbot',
     },
   ];
 
@@ -90,7 +118,7 @@ export function Home({ onNavigate }: HomeProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header onNavigate={onNavigate} currentPage="home" />
+      <Header />
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#004AAD] to-[#0066CC] text-white">
@@ -105,7 +133,7 @@ export function Home({ onNavigate }: HomeProps) {
                 <Button
                   size="lg"
                   className="bg-white text-[#004AAD] hover:bg-gray-100 hover:scale-105 transition-transform shadow-lg"
-                  onClick={() => onNavigate('registration')}
+                  onClick={() => navigate('/pendaftaran')}
                 >
                   Daftar Sekarang
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -114,7 +142,7 @@ export function Home({ onNavigate }: HomeProps) {
                   size="lg"
                   variant="outline"
                   className="border-2 border-white text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-[#004AAD] hover:scale-105 transition-all shadow-lg font-semibold"
-                  onClick={() => onNavigate('info')}
+                  onClick={() => navigate('/informasi-magang')}
                 >
                   Lihat Panduan
                 </Button>
@@ -148,7 +176,7 @@ export function Home({ onNavigate }: HomeProps) {
                 <Card
                   key={index}
                   className="p-6 hover:shadow-lg hover:scale-[1.02] hover:border-[#004AAD] transition-all duration-300 cursor-pointer bg-white border-2 border-transparent"
-                  onClick={() => onNavigate(feature.page)}
+                  onClick={() => navigate(feature.path)}
                 >
                   <div className="w-14 h-14 bg-[#004AAD]/10 rounded-lg flex items-center justify-center mb-4 transition-colors group-hover:bg-[#004AAD]/20">
                     <Icon className="w-7 h-7 text-[#004AAD]" />
@@ -199,6 +227,87 @@ export function Home({ onNavigate }: HomeProps) {
         </div>
       </section>
 
+      {/* Available Positions Section */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-[#004AAD] mb-3">Posisi Magang Tersedia</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Lihat posisi magang yang saat ini terbuka untuk pendaftaran
+            </p>
+          </div>
+
+          {loadingPositions ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#004AAD] mx-auto"></div>
+              <p className="text-gray-600 mt-4">Memuat posisi tersedia...</p>
+            </div>
+          ) : positions.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {positions.map((position) => (
+                  <Card
+                    key={position.id}
+                    className="p-6 hover:shadow-lg transition-shadow border-2 border-gray-200 hover:border-[#004AAD]"
+                  >
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="w-12 h-12 bg-[#004AAD]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Briefcase className="w-6 h-6 text-[#004AAD]" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-[#004AAD] mb-1">{position.title}</h3>
+                        <p className="text-sm text-gray-600">{position.department}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-between text-gray-600">
+                        <span>Kuota:</span>
+                        <span className="font-semibold">{position.quota} orang</span>
+                      </div>
+                      <div className="flex items-center justify-between text-gray-600">
+                        <span>Durasi:</span>
+                        <span className="font-semibold">{position.duration}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-gray-600">
+                        <span>Untuk:</span>
+                        <span className="font-semibold capitalize">
+                          {position.applicant_type === 'both' ? 'Mahasiswa & Pelajar' : position.applicant_type}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button
+                      className="w-full mt-4 bg-[#004AAD] hover:bg-[#003580]"
+                      onClick={() => navigate('/pendaftaran')}
+                    >
+                      Daftar Posisi Ini
+                    </Button>
+                  </Card>
+                ))}
+              </div>
+              
+              <div className="text-center">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-2 border-[#004AAD] text-[#004AAD] hover:bg-[#004AAD] hover:text-white"
+                  onClick={() => navigate('/informasi-magang')}
+                >
+                  Lihat Semua Posisi
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-600">Belum ada posisi magang tersedia saat ini.</p>
+              <p className="text-sm text-gray-500 mt-2">Silakan cek kembali nanti.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[#FFD95A]">
         <div className="container mx-auto px-4 text-center">
@@ -209,7 +318,7 @@ export function Home({ onNavigate }: HomeProps) {
           <Button
             size="lg"
             className="bg-[#004AAD] text-white hover:bg-[#003580] hover:scale-105 transition-transform shadow-lg"
-            onClick={() => onNavigate('registration')}
+            onClick={() => navigate('/pendaftaran')}
           >
             Daftar Sekarang
             <ArrowRight className="ml-2 w-5 h-5" />

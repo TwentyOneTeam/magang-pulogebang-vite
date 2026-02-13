@@ -1,17 +1,13 @@
 import { useState } from 'react';
-import { HelpCircle, X, MessageCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { HelpCircle, MessageCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 
-type Page = 'home' | 'info' | 'registration' | 'status' | 'chatbot' | 'admin';
-
-interface HelpButtonProps {
-  onNavigate: (page: Page) => void;
-}
-
-export function HelpButton({ onNavigate }: HelpButtonProps) {
+export function HelpButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const helpItems = [
     {
@@ -19,7 +15,7 @@ export function HelpButton({ onNavigate }: HelpButtonProps) {
       description: 'Pelajari langkah-langkah untuk mendaftar program magang',
       action: () => {
         setIsOpen(false);
-        onNavigate('info');
+        navigate('/informasi-magang');
       },
     },
     {
@@ -27,7 +23,7 @@ export function HelpButton({ onNavigate }: HelpButtonProps) {
       description: 'Dapatkan jawaban cepat dari asisten AI kami',
       action: () => {
         setIsOpen(false);
-        onNavigate('chatbot');
+        navigate('/chatbot');
       },
     },
     {
@@ -35,7 +31,7 @@ export function HelpButton({ onNavigate }: HelpButtonProps) {
       description: 'Pantau status pengajuan magang Anda',
       action: () => {
         setIsOpen(false);
-        onNavigate('status');
+        navigate('/status-pengajuan');
       },
     },
     {
@@ -43,7 +39,7 @@ export function HelpButton({ onNavigate }: HelpButtonProps) {
       description: 'Lihat lowongan magang yang tersedia',
       action: () => {
         setIsOpen(false);
-        onNavigate('info');
+        navigate('/informasi-magang');
       },
     },
   ];
@@ -64,35 +60,35 @@ export function HelpButton({ onNavigate }: HelpButtonProps) {
 
       {/* Help Dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="text-[#004AAD] flex items-center gap-2">
-              <MessageCircle className="w-6 h-6" />
-              Bantuan & Panduan
+        <DialogContent className="w-[95vw] max-w-sm sm:max-w-md md:max-w-lg p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="space-y-2">
+            <DialogTitle className="text-[#004AAD] flex items-center gap-2 text-base sm:text-lg">
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+              <span className="truncate">Bantuan & Panduan</span>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs sm:text-sm">
               Pilih topik bantuan yang Anda butuhkan
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3 mt-4">
+          <div className="space-y-2 sm:space-y-3 mt-3 sm:mt-4">
             {helpItems.map((item, index) => (
               <Card
                 key={index}
-                className="p-4 cursor-pointer hover:shadow-md hover:border-[#004AAD] transition-all duration-200 border-2 hover:scale-[1.02]"
+                className="p-3 sm:p-4 cursor-pointer hover:shadow-md hover:border-[#004AAD] transition-all duration-200 border-2 hover:scale-[1.02]"
                 onClick={item.action}
               >
-                <h4 className="text-[#004AAD] mb-1">{item.title}</h4>
-                <p className="text-sm text-gray-600">{item.description}</p>
+                <h4 className="text-[#004AAD] mb-1 text-sm sm:text-base font-medium truncate">{item.title}</h4>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{item.description}</p>
               </Card>
             ))}
           </div>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm text-[#004AAD]">
-              <strong>Butuh bantuan lebih lanjut?</strong><br />
-              Hubungi kami di: <span className="underline">info@pulogebang.go.id</span><br />
-              Telepon: <span className="underline">(021) 1234-5678</span>
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-xs sm:text-sm text-[#004AAD] leading-relaxed">
+              <strong className="block mb-1">Butuh bantuan lebih lanjut?</strong>
+              <span className="block">Email: kel_pulogebang@jakarta.go.id</span>
+              <span className="block">Telepon: 085280471981</span>
             </p>
           </div>
         </DialogContent>

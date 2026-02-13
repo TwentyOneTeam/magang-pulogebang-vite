@@ -1,369 +1,333 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Card } from './ui/card';
+import { Button } from './ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Badge } from './ui/badge';
-import { Calendar, Users, Clock, MapPin, ArrowRight, FileText, CheckCircle, UserCheck, ClipboardCheck, Briefcase } from 'lucide-react';
+import { Calendar, Users, MapPin, ArrowRight, FileText, CheckCircle, UserCheck, ClipboardCheck, Briefcase, Loader2, AlertCircle } from 'lucide-react';
+import { positionsAPI } from '../services/api';
+import { Alert, AlertDescription } from './ui/alert';
 
-type Page = 'home' | 'info' | 'registration' | 'status' | 'chatbot' | 'admin';
-
-interface InternshipInfoProps {
-  onNavigate: (page: Page) => void;
+interface Position {
+  id: string;
+  title: string;
+  department: string;
+  description: string;
+  requirements: string;
+  quota: number;
+  duration: string;
+  applicant_type: string;
+  is_active: boolean;
+  created_at: string;
 }
 
-export function InternshipInfo({ onNavigate }: InternshipInfoProps) {
-  // Data lowongan magang dengan periode, divisi/peran, dan kuota
-  const internshipVacancies = [
-    {
-      id: 1,
-      period: 'Januari - Maret 2025',
-      startDate: '13 Januari 2025',
-      endDate: '28 Maret 2025',
-      division: 'Administrasi Umum',
-      role: 'Staff Administrasi',
-      quota: 5,
-      available: 2,
-      requirements: ['Mahasiswa aktif S1/D3', 'Menguasai Microsoft Office', 'Teliti dan detail'],
-      status: 'open',
-    },
-    {
-      id: 2,
-      period: 'Januari - Maret 2025',
-      startDate: '13 Januari 2025',
-      endDate: '28 Maret 2025',
-      division: 'Teknologi Informasi',
-      role: 'Web Developer',
-      quota: 3,
-      available: 1,
-      requirements: ['Mahasiswa Teknik Informatika/SI', 'Menguasai HTML, CSS, JavaScript', 'Pengalaman framework lebih disukai'],
-      status: 'open',
-    },
-    {
-      id: 3,
-      period: 'April - Juni 2025',
-      startDate: '1 April 2025',
-      endDate: '30 Juni 2025',
-      division: 'Keuangan',
-      role: 'Staff Accounting',
-      quota: 4,
-      available: 4,
-      requirements: ['Mahasiswa Akuntansi/Manajemen', 'Paham dasar akuntansi', 'Teliti dalam perhitungan'],
-      status: 'upcoming',
-    },
-    {
-      id: 4,
-      period: 'April - Juni 2025',
-      startDate: '1 April 2025',
-      endDate: '30 Juni 2025',
-      division: 'Pelayanan Publik',
-      role: 'Customer Service',
-      quota: 6,
-      available: 6,
-      requirements: ['Mahasiswa aktif', 'Komunikatif', 'Ramah dan sabar'],
-      status: 'upcoming',
-    },
-    {
-      id: 5,
-      period: 'Juli - September 2025',
-      startDate: '1 Juli 2025',
-      endDate: '30 September 2025',
-      division: 'Kesejahteraan Sosial',
-      role: 'Community Officer',
-      quota: 4,
-      available: 4,
-      requirements: ['Mahasiswa Ilmu Sosial/Kesejahteraan', 'Empati tinggi', 'Suka berinteraksi dengan masyarakat'],
-      status: 'upcoming',
-    },
-    {
-      id: 6,
-      period: 'Oktober - Desember 2025',
-      startDate: '1 Oktober 2025',
-      endDate: '31 Desember 2025',
-      division: 'Administrasi Kependudukan',
-      role: 'Data Entry Specialist',
-      quota: 5,
-      available: 5,
-      requirements: ['Mahasiswa aktif', 'Teliti dan akurat', 'Cepat dalam mengetik'],
-      status: 'upcoming',
-    },
-  ];
+export function InternshipInfo() {
+  const navigate = useNavigate();
+  const [positions, setPositions] = useState<Position[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPositions();
+  }, []);
+
+  const fetchPositions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await positionsAPI.getAll({ isActive: true });
+      
+      if (response.success && response.data) {
+        setPositions(response.data);
+      } else {
+        setError(response.message || 'Gagal memuat data posisi');
+      }
+    } catch (err: any) {
+      console.error('Error fetching positions:', err);
+      setError(err.message || 'Terjadi kesalahan saat memuat data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const sopSteps = [
     {
       number: 1,
       icon: FileText,
       title: 'Persiapan Dokumen',
-      description: 'Mahasiswa menyiapkan surat permohonan magang dari kampus',
+      description: 'Mahasiswa/Pelajar menyiapkan surat permohonan magang dari kampus/sekolah',
     },
     {
       number: 2,
       icon: ClipboardCheck,
       title: 'Pendaftaran Online',
-      description: 'Mengisi formulir pendaftaran dan upload dokumen di sistem',
+      description: 'Isi formulir pendaftaran melalui sistem online dan upload dokumen persyaratan',
     },
     {
       number: 3,
       icon: UserCheck,
-      title: 'Verifikasi Admin',
-      description: 'Staf kelurahan memverifikasi dokumen dan kelengkapan data',
+      title: 'Verifikasi',
+      description: 'Tim admin memverifikasi dokumen dan menghubungi pelamar (2-3 hari kerja)',
     },
     {
       number: 4,
       icon: CheckCircle,
-      title: 'Konfirmasi & Mulai Magang',
-      description: 'Mahasiswa mendapat konfirmasi dan memulai kegiatan magang',
+      title: 'Mulai Magang',
+      description: 'Pelamar yang diterima mengikuti orientasi dan memulai program magang',
     },
   ];
 
-  const divisions = [
-    {
-      name: 'Pelayanan Umum',
-      description: 'Menangani pelayanan administrasi dan keperluan warga',
-      icon: Users,
-    },
-    {
-      name: 'Kesejahteraan Sosial',
-      description: 'Fokus pada program bantuan sosial dan pemberdayaan masyarakat',
-      icon: Users,
-    },
-    {
-      name: 'Pemberdayaan Masyarakat',
-      description: 'Mengembangkan potensi dan kemandirian masyarakat',
-      icon: Users,
-    },
-    {
-      name: 'Administrasi Kependudukan',
-      description: 'Mengelola data kependudukan dan dokumen resmi',
-      icon: Users,
-    },
-    {
-      name: 'Teknologi Informasi',
-      description: 'Mengelola sistem informasi dan infrastruktur digital',
-      icon: Users,
-    },
+  const requirements = [
+    'Mahasiswa aktif dari perguruan tinggi terakreditasi atau pelajar SMA/SMK',
+    'Surat pengantar dari kampus/sekolah',
+    'CV terbaru',
+    'Fotokopi KTP',
+    'Pas foto 3x4 (2 lembar)',
+    'Fotokopi Kartu Mahasiswa/Pelajar',
+    'Kesediaan mengikuti program magang sesuai durasi yang ditentukan',
   ];
 
-  const faqs = [
-    {
-      question: 'Berapa lama durasi program magang?',
-      answer: 'Durasi program magang di Kelurahan Pulo Gebang adalah 3 bulan per periode. Namun, durasi dapat disesuaikan dengan kebutuhan kampus mahasiswa.',
-    },
-    {
-      question: 'Apa saja persyaratan untuk mendaftar magang?',
-      answer: 'Persyaratan meliputi: (1) Mahasiswa aktif dari perguruan tinggi terakreditasi, (2) Surat pengantar dari kampus, (3) CV terbaru, (4) Fotokopi KTP, (5) Pas foto 3x4.',
-    },
-    {
-      question: 'Apakah program magang ini berbayar?',
-      answer: 'Program magang ini tidak berbayar. Namun, mahasiswa akan mendapatkan sertifikat resmi setelah menyelesaikan program dan laporan akhir.',
-    },
-    {
-      question: 'Bagaimana cara memantau status pengajuan?',
-      answer: 'Anda dapat memantau status pengajuan melalui menu "Status Pengajuan" di sistem ini. Login dengan email yang Anda gunakan saat mendaftar.',
-    },
-    {
-      question: 'Divisi apa saja yang tersedia untuk magang?',
-      answer: 'Divisi yang tersedia meliputi: Pelayanan Umum, Kesejahteraan Sosial, Pemberdayaan Masyarakat, Administrasi Kependudukan, dan Teknologi Informasi.',
-    },
-    {
-      question: 'Bagaimana jika kuota sudah penuh?',
-      answer: 'Jika kuota periode tertentu sudah penuh, Anda dapat mendaftar untuk periode berikutnya. Sistem akan mengirimkan notifikasi jika ada pembukaan kuota tambahan.',
-    },
+  const benefits = [
+    'Sertifikat magang resmi dari Kelurahan Pulo Gebang',
+    'Pengalaman kerja di instansi pemerintahan',
+    'Bimbingan dari supervisor berpengalaman',
+    'Networking dengan profesional',
+    'Pembelajaran sistem administrasi pemerintahan',
+    'Referensi untuk karir masa depan',
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header onNavigate={onNavigate} currentPage="info" />
+      <Header />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#004AAD] to-[#0066CC] text-white py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-white mb-4 font-bold text-[20px]">Informasi Magang</h1>
+          <h1 className="text-white mb-4 text-[20px] font-bold">Informasi Magang</h1>
           <p className="text-lg text-gray-100 max-w-3xl">
-            Temukan semua informasi yang Anda butuhkan tentang program magang di Kelurahan Pulo Gebang
+            Temukan peluang magang yang sesuai dengan minat dan keahlian Anda di Kelurahan Pulo Gebang
           </p>
         </div>
       </section>
 
-      {/* Lowongan Magang Section */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="mb-8">
-            <h2 className="text-[#004AAD] mb-2">Lowongan Magang Tersedia</h2>
-            <p className="text-gray-600">Pilih periode, divisi, dan peran yang sesuai dengan minat Anda</p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {internshipVacancies.map((vacancy) => (
-              <Card key={vacancy.id} className="p-6 border-l-4 border-l-[#004AAD] hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-[#004AAD] mb-1">{vacancy.division}</h3>
-                    <p className="text-sm text-gray-600">{vacancy.role}</p>
-                  </div>
-                  <Badge
-                    variant={vacancy.status === 'open' ? 'default' : 'secondary'}
-                    className={vacancy.status === 'open' ? 'bg-green-500 hover:bg-green-600' : 'bg-[#FFD95A] text-[#004AAD] hover:bg-[#FFD95A]/90'}
-                  >
-                    {vacancy.status === 'open' ? 'Buka' : 'Segera'}
-                  </Badge>
-                </div>
-
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-700">
-                      <strong>Periode:</strong> {vacancy.period}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-700">
-                      {vacancy.startDate} - {vacancy.endDate}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Users className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-700">
-                      <strong>Kuota:</strong> {vacancy.available}/{vacancy.quota} tersedia
-                    </span>
-                  </div>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="mb-4 bg-[#F4F4F4] rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-gray-600">Ketersediaan</span>
-                    <span className="text-xs">{Math.round((vacancy.available / vacancy.quota) * 100)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-300 rounded-full h-2">
-                    <div
-                      className="bg-[#004AAD] h-2 rounded-full transition-all"
-                      style={{ width: `${(vacancy.available / vacancy.quota) * 100}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Requirements */}
-                <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">Persyaratan:</p>
-                  <ul className="space-y-1">
-                    {vacancy.requirements.map((req, idx) => (
-                      <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
-                        <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="mt-8 text-center">
-            <p className="text-gray-600 mb-4">Tertarik dengan lowongan di atas?</p>
-            <button
-              onClick={() => onNavigate('registration')}
-              className="inline-flex items-center gap-2 bg-[#004AAD] text-white px-6 py-3 rounded-lg hover:bg-[#003A8C] hover:scale-105 active:scale-95 transition-all shadow-lg"
-            >
-              Daftar Sekarang
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Divisi Section */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="mb-8">
-            <h2 className="text-[#004AAD] mb-2">Divisi yang Tersedia</h2>
-            <p className="text-gray-600">Pilih divisi sesuai dengan minat dan keahlian Anda</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {divisions.map((division, index) => (
-              <Card key={index} className="p-6 bg-white hover:shadow-lg hover:scale-[1.02] transition-all duration-300 border-t-4 border-t-[#004AAD]">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#004AAD] rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Briefcase className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-[#004AAD] mb-2">{division.name}</h3>
-                    <p className="text-sm text-gray-600">{division.description}</p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SOP Section */}
+      {/* Info Cards Section */}
       <section className="py-12 md:py-16 bg-[#F4F4F4]">
         <div className="container mx-auto px-4">
-          <div className="mb-8 text-center">
-            <h2 className="text-[#004AAD] mb-2">Standar Operasional Prosedur (SOP)</h2>
-            <p className="text-gray-600">Alur proses pendaftaran hingga pelaksanaan magang</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <Card className="p-6 bg-white text-center hover:shadow-lg transition-shadow">
+              <div className="w-14 h-14 bg-[#004AAD]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Calendar className="w-7 h-7 text-[#004AAD]" />
+              </div>
+              <h3 className="text-[#004AAD] mb-2">Durasi Fleksibel</h3>
+              <p className="text-sm text-gray-600">1-6 bulan sesuai kebutuhan</p>
+            </Card>
+
+            <Card className="p-6 bg-white text-center hover:shadow-lg transition-shadow">
+              <div className="w-14 h-14 bg-[#004AAD]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-7 h-7 text-[#004AAD]" />
+              </div>
+              <h3 className="text-[#004AAD] mb-2">Kuota Terbatas</h3>
+              <p className="text-sm text-gray-600">
+                {loading ? '...' : `${positions.reduce((sum, pos) => sum + pos.quota, 0)} posisi tersedia`}
+              </p>
+            </Card>
+
+            <Card className="p-6 bg-white text-center hover:shadow-lg transition-shadow">
+              <div className="w-14 h-14 bg-[#004AAD]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-7 h-7 text-[#004AAD]" />
+              </div>
+              <h3 className="text-[#004AAD] mb-2">Lokasi</h3>
+              <p className="text-sm text-gray-600">Kelurahan Pulo Gebang, Jl. Raya Pulo Gebang No.3, RT.6/RW.3, Jakarta Timur</p>
+            </Card>
           </div>
 
-          <div className="max-w-4xl mx-auto">
+          {/* Available Positions */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-[#004AAD] mb-3">Posisi Magang Tersedia</h2>
+              <p className="text-gray-600">
+                Pilih posisi yang sesuai dengan minat dan keahlian Anda
+              </p>
+            </div>
+
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-16">
+                <Loader2 className="w-12 h-12 animate-spin text-[#004AAD] mb-4" />
+                <p className="text-gray-600">Memuat posisi tersedia...</p>
+              </div>
+            ) : error ? (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : positions.length === 0 ? (
+              <Card className="p-12 text-center bg-white">
+                <Briefcase className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-gray-700 mb-2">Belum Ada Posisi Tersedia</h3>
+                <p className="text-gray-600">
+                  Saat ini belum ada posisi magang yang dibuka. Silakan cek kembali nanti.
+                </p>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {positions.map((position) => (
+                  <Card
+                    key={position.id}
+                    className="p-6 bg-white hover:shadow-lg hover:border-[#004AAD] transition-all border-2 border-transparent"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-[#004AAD] mb-2">{position.title}</h3>
+                        <p className="text-sm text-gray-600 mb-1">{position.department}</p>
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                          {position.applicant_type === 'both' 
+                            ? 'Mahasiswa & Pelajar' 
+                            : position.applicant_type === 'mahasiswa'
+                            ? 'Mahasiswa'
+                            : 'Pelajar'}
+                        </Badge>
+                      </div>
+                      <div className="w-12 h-12 bg-[#FFD95A] rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Briefcase className="w-6 h-6 text-[#004AAD]" />
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+                      {position.description}
+                    </p>
+
+                    <div className="space-y-2 mb-4 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Kuota:</span>
+                        <span className="font-semibold">{position.quota === 0 || position.quota === null || position.quota === undefined ? 'Tak Terbatas' : `${position.quota} orang`}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Durasi:</span>
+                        <span className="font-semibold">{position.duration}</span>
+                      </div>
+                    </div>
+
+                    <Accordion type="single" collapsible className="mb-4">
+                      <AccordionItem value="requirements">
+                        <AccordionTrigger className="text-sm">
+                          Lihat Persyaratan
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
+                            {position.requirements.split('\n').map((req, idx) => (
+                              <li key={idx}>{req}</li>
+                            ))}
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+
+                    <Button
+                      className="w-full bg-[#004AAD] hover:bg-[#003580]"
+                      onClick={() => navigate('/registration')}
+                    >
+                      Daftar Sekarang
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* SOP Steps */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-[#004AAD] mb-3">Alur Pendaftaran</h2>
+              <p className="text-gray-600">
+                Ikuti 4 langkah mudah untuk mendaftar program magang
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {sopSteps.map((step, index) => {
                 const Icon = step.icon;
                 return (
-                  <div key={index} className="relative">
-                    {/* Arrow connector for desktop */}
+                  <Card key={index} className="p-6 bg-white text-center relative">
+                    {/* Connector Line */}
                     {index < sopSteps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-[60%] z-0">
-                        <ArrowRight className="w-6 h-6 text-[#FFD95A]" />
-                      </div>
+                      <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-[#FFD95A]" />
                     )}
-
-                    <Card className="p-6 text-center bg-white relative z-10 h-full">
-                      <div className="w-16 h-16 bg-[#004AAD] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Icon className="w-8 h-8 text-white" />
+                    
+                    <div className="relative z-10">
+                      <div className="w-16 h-16 bg-[#FFD95A] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Icon className="w-8 h-8 text-[#004AAD]" />
                       </div>
-                      <div className="w-8 h-8 bg-[#FFD95A] text-[#004AAD] rounded-full flex items-center justify-center mx-auto mb-3">
+                      <div className="w-8 h-8 bg-[#004AAD] text-white rounded-full flex items-center justify-center mx-auto mb-3">
                         {step.number}
                       </div>
                       <h3 className="text-[#004AAD] mb-2">{step.title}</h3>
                       <p className="text-sm text-gray-600">{step.description}</p>
-                    </Card>
-                  </div>
+                    </div>
+                  </Card>
                 );
               })}
             </div>
           </div>
+
+          {/* Requirements & Benefits */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Requirements */}
+            <Card className="p-6 bg-white">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-[#004AAD]/10 rounded-lg flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-[#004AAD]" />
+                </div>
+                <h3 className="text-[#004AAD]">Persyaratan Umum</h3>
+              </div>
+              <ul className="space-y-2">
+                {requirements.map((req, index) => (
+                  <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span>{req}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+
+            {/* Benefits */}
+            <Card className="p-6 bg-white">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-[#FFD95A] rounded-lg flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-[#004AAD]" />
+                </div>
+                <h3 className="text-[#004AAD]">Manfaat Magang</h3>
+              </div>
+              <ul className="space-y-2">
+                {benefits.map((benefit, index) => (
+                  <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                    <CheckCircle className="w-4 h-4 text-[#004AAD] mt-0.5 flex-shrink-0" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-12 md:py-16 bg-white">\n
-        <div className="container mx-auto px-4">
-          <div className="mb-8">
-            <h2 className="text-[#004AAD] mb-2">Pertanyaan yang Sering Diajukan (FAQ)</h2>
-            <p className="text-gray-600">Temukan jawaban untuk pertanyaan umum tentang program magang</p>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-4">
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
-                  value={`item-${index}`}
-                  className="border rounded-lg px-6 bg-white shadow-sm"
-                >
-                  <AccordionTrigger className="text-left hover:no-underline">
-                    <span className="text-[#004AAD]">{faq.question}</span>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+      {/* CTA Section */}
+      <section className="py-12 md:py-16 bg-[#FFD95A]">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-[#004AAD] mb-4">Siap Untuk Mendaftar?</h2>
+          <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+            Jangan lewatkan kesempatan untuk mengembangkan skill dan pengalaman Anda di Kelurahan Pulo Gebang
+          </p>
+          <Button
+            size="lg"
+            className="bg-[#004AAD] text-white hover:bg-[#003580] hover:scale-105 transition-transform shadow-lg"
+            onClick={() => navigate('/pendaftaran')}
+          >
+            Daftar Program Magang
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
         </div>
       </section>
 
