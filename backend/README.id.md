@@ -2,17 +2,23 @@
 
 Backend API menggunakan **Express.js**, **PostgreSQL**, dan **Gemini AI**.
 
-> 📚 Untuk konteks proyek lengkap, lihat [README utama](../README.id.md) | [Main README (English)](../README.md)
+<p align="center">
+  <strong>📚 Bahasa:</strong> <a href="README.md">English</a> | <strong>Bahasa Indonesia</strong> | <a href="../README.id.md">README Utama</a>
+</p>
 
 ## 📋 Daftar Isi
 
-- [Instalasi](#instalasi)
-- [Konfigurasi](#konfigurasi)
-- [Menjalankan Server](#menjalankan-server)
-- [API Endpoints](#api-endpoints)
-- [Koneksi Frontend](#koneksi-frontend)
-- [Testing](#testing)
-- [Deployment](#deployment)
+- [🚀 Instalasi](#-instalasi)
+- [⚙️ Konfigurasi](#%EF%B8%8F-konfigurasi)
+- [🏃 Menjalankan Server](#-menjalankan-server)
+- [📚 API Endpoints](#-api-endpoints)
+- [🔄 Koneksi Frontend](#-koneksi-frontend)
+- [🧪 Testing API](#-testing-api)
+- [📂 Struktur Folder](#-struktur-folder)
+- [🌐 Deployment](#-deployment-ke-vps-hostinger)
+- [🔧 Pemecahan Masalah](#-pemecahan-masalah)
+- [📞 Dukungan](#-dukungan)
+- [📝 Lisensi](#-lisensi)
 
 ---
 
@@ -21,7 +27,7 @@ Backend API menggunakan **Express.js**, **PostgreSQL**, dan **Gemini AI**.
 ### 1. Install PostgreSQL
 
 **Windows:**
-1. Download dari [postgresql.org/download/windows](https://www.postgresql.org/download/windows/)
+1. Unduh dari [postgresql.org/download/windows](https://www.postgresql.org/download/windows/)
 2. Install dengan default settings
 3. Catat password untuk user `postgres`
 
@@ -216,26 +222,26 @@ npm start
 
 Backend ini dirancang untuk diakses oleh frontend yang berjalan di `http://localhost:5173` (default Vite dev server).
 
-### CORS Configuration
+### Konfigurasi CORS
 - Frontend URL diatur di `FRONTEND_URL` di `.env`
-- Backend automatically mengizinkan request dari frontend URL
-- JWT tokens dikirim via `Authorization` header
+- Backend secara otomatis mengizinkan request dari URL frontend
+- JWT tokens dikirim melalui header `Authorization`
 
-### API Base URL di Frontend
+### Base URL API di Frontend
 ```typescript
 // Dari frontend, panggil API:
-https://localhost:3001/api/...
+http://localhost:3001/api/...
 
 // Contoh:
 POST http://localhost:3001/api/auth/login
 GET http://localhost:3001/api/positions
 ```
 
-### Authentication Flow
+### Alur Autentikasi
 1. User login → POST `/api/auth/login`
-2. Backend return JWT token
-3. Frontend simpan token di localStorage/cookies
-4. Setiap request kirim token di header: `Authorization: Bearer <token>`
+2. Backend mengembalikan JWT token
+3. Frontend menyimpan token di localStorage/cookies
+4. Setiap request mengirim token di header: `Authorization: Bearer <token>`
 
 Lihat [Frontend Service](../src/services/api.ts) untuk implementasi detail.
 
@@ -474,7 +480,7 @@ sudo ufw enable
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 Pemecahan Masalah
 
 ### Database connection failed
 
@@ -515,7 +521,7 @@ chmod 755 uploads
 
 ---
 
-## 📞 Support
+## 📞 Dukungan
 
 Jika ada masalah:
 1. Cek logs: `pm2 logs magang-api` (production) atau console (development)
@@ -524,6 +530,6 @@ Jika ada masalah:
 
 ---
 
-## 📝 License
+## 📝 Lisensi
 
-ISC
+Proyek ini dilisensikan di bawah MIT License. Lihat [LICENSE](LICENSE) untuk informasi lebih lanjut.

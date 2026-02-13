@@ -1,29 +1,35 @@
-# Backend API - Sistem Informasi Magang Kelurahan Pulo Gebang
+# Backend API - Internship Information System Kelurahan Pulo Gebang
 
-Backend API menggunakan **Express.js**, **PostgreSQL**, dan **Gemini AI**.
+Backend API using **Express.js**, **PostgreSQL**, and **Gemini AI**.
 
-> 📚 For full project context, see [Main README](../README.md) | [README Bahasa Indonesia](../README.id.md)
+<p align="center">
+  <strong>📚 Language:</strong> <strong>English</strong> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="../README.md">Main README</a>
+</p>
 
-## 📋 Daftar Isi
+## 📋 Table of Contents
 
-- [Instalasi](#instalasi)
-- [Konfigurasi](#konfigurasi)
-- [Menjalankan Server](#menjalankan-server)
-- [API Endpoints](#api-endpoints)
-- [Frontend Connection](#frontend-connection)
-- [Testing](#testing)
-- [Deployment](#deployment)
+- [🚀 Installation](#-installation)
+- [⚙️ Configuration](#%EF%B8%8F-configuration)
+- [🏃 Running Server](#-running-server)
+- [📚 API Endpoints](#-api-endpoints)
+- [🔄 Frontend Connection](#-frontend-connection)
+- [🧪 Testing API](#-testing-api)
+- [📂 Folder Structure](#-folder-structure)
+- [🌐 Deployment](#-deployment-to-hostinger-vps)
+- [🔧 Troubleshooting](#-troubleshooting)
+- [📞 Support](#-support)
+- [📝 License](#-license)
 
 ---
 
-## 🚀 Instalasi
+## 🚀 Installation
 
 ### 1. Install PostgreSQL
 
 **Windows:**
-1. Download dari [postgresql.org/download/windows](https://www.postgresql.org/download/windows/)
-2. Install dengan default settings
-3. Catat password untuk user `postgres`
+1. Download from [postgresql.org/download/windows](https://www.postgresql.org/download/windows/)
+2. Install with default settings
+3. Note the password for `postgres` user
 
 **macOS:**
 ```bash
@@ -40,16 +46,16 @@ sudo systemctl start postgresql
 
 ### 2. Create Database
 
-Buka PostgreSQL command line:
+Open PostgreSQL command line:
 
-**Windows:** Cari "SQL Shell (psql)" di Start Menu
+**Windows:** Search for "SQL Shell (psql)" in Start Menu
 
 **Mac/Linux:**
 ```bash
 psql -U postgres
 ```
 
-Kemudian jalankan:
+Then run:
 ```sql
 CREATE DATABASE magang_pulogebang;
 \q
@@ -64,17 +70,17 @@ npm install
 
 ---
 
-## ⚙️ Konfigurasi
+## ⚙️ Configuration
 
-### 1. Copy file environment
+### 1. Copy environment file
 
 ```bash
 cp .env.example .env
 ```
 
-### 2. Edit file `.env`
+### 2. Edit `.env` file
 
-Buka file `.env` dan isi dengan data Anda:
+Open `.env` file and fill with your configuration:
 
 ```env
 # Database
@@ -84,43 +90,43 @@ DB_NAME=magang_pulogebang
 DB_USER=postgres
 DB_PASSWORD=your_postgres_password_here
 
-# JWT Secret (ganti dengan random string)
-JWT_SECRET=rahasia_jwt_anda_ganti_ini_12345
+# JWT Secret (replace with random string)
+JWT_SECRET=your_jwt_secret_key_12345
 
 # Gemini API Key
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Frontend URL (PENTING untuk CORS & redirect)
+# Frontend URL (IMPORTANT for CORS & redirect)
 FRONTEND_URL=http://localhost:5173
 ```
 
-### 3. Dapatkan Gemini API Key (GRATIS!)
+### 3. Get Gemini API Key (FREE!)
 
-1. Buka [https://ai.google.dev/](https://ai.google.dev/)
-2. Klik **"Get API Key in Google AI Studio"**
-3. Login dengan Google Account
-4. Klik **"Create API Key"**
-5. Copy API Key dan paste ke `.env`
+1. Open [https://ai.google.dev/](https://ai.google.dev/)
+2. Click **"Get API Key in Google AI Studio"**
+3. Login with Google Account
+4. Click **"Create API Key"**
+5. Copy API Key and paste to `.env`
 
-**Screenshot lokasi:**
+**Location screenshot:**
 ```
 Google AI Studio > Get API key > Create API key in new project
 ```
 
 ### 4. Initialize Database
 
-Jalankan script untuk membuat tabel dan data awal:
+Run script to create tables and initial data:
 
 ```bash
 npm run init-db
 ```
 
-**Script ini akan:**
-- ✅ Create semua tabel di database
-- ✅ Create admin user default
-- ✅ Create sample posisi magang
+**This script will:**
+- ✅ Create all tables in database
+- ✅ Create default admin user
+- ✅ Create sample internship positions
 
-**Output yang diharapkan:**
+**Expected output:**
 ```
 ✅ Database initialization completed successfully!
 
@@ -130,11 +136,11 @@ npm run init-db
    - Sample Positions: 5 positions created
 ```
 
-⚠️ **PENTING:** Catat email dan password admin!
+⚠️ **IMPORTANT:** Note the admin email and password!
 
 ---
 
-## 🏃 Menjalankan Server
+## 🏃 Running Server
 
 ### Development Mode (auto-reload)
 
@@ -148,9 +154,9 @@ npm run dev
 npm start
 ```
 
-**Server akan berjalan di:** `http://localhost:3001`
+**Server will run at:** `http://localhost:3001`
 
-**Output sukses:**
+**Expected successful output:**
 ```
 ✅ Server is running!
 📍 Local:            http://localhost:3001
@@ -173,84 +179,84 @@ npm start
 
 ### Authentication (`/api/auth`)
 
-| Method | Endpoint | Auth | Deskripsi |
+| Method | Endpoint | Auth | Description |
 |--------|----------|------|-----------|
-| POST | `/register` | ❌ | Register user baru |
+| POST | `/register` | ❌ | Register new user |
 | POST | `/login` | ❌ | Login user/admin |
 | GET | `/me` | ✅ | Get current user |
 | PUT | `/profile` | ✅ | Update profile |
-| PUT | `/change-password` | ✅ | Ganti password |
+| PUT | `/change-password` | ✅ | Change password |
 
 ### Positions (`/api/positions`)
 
-| Method | Endpoint | Auth | Role | Deskripsi |
+| Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-----------|
-| GET | `/` | ❌ | - | Get semua posisi |
-| GET | `/:id` | ❌ | - | Get posisi by ID |
-| POST | `/` | ✅ | Admin | Create posisi baru |
-| PUT | `/:id` | ✅ | Admin | Update posisi |
-| DELETE | `/:id` | ✅ | Admin | Delete posisi |
-| PATCH | `/:id/toggle-active` | ✅ | Admin | Aktifkan/nonaktifkan |
+| GET | `/` | ❌ | - | Get all positions |
+| GET | `/:id` | ❌ | - | Get position by ID |
+| POST | `/` | ✅ | Admin | Create new position |
+| PUT | `/:id` | ✅ | Admin | Update position |
+| DELETE | `/:id` | ✅ | Admin | Delete position |
+| PATCH | `/:id/toggle-active` | ✅ | Admin | Toggle active status |
 
 ### Applications (`/api/applications`)
 
-| Method | Endpoint | Auth | Role | Deskripsi |
+| Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-----------|
-| GET | `/` | ✅ | All | Get applications (user: miliknya, admin: semua) |
+| GET | `/` | ✅ | All | Get applications (user: own, admin: all) |
 | GET | `/:id` | ✅ | All | Get application detail |
 | GET | `/stats` | ✅ | Admin | Get statistics |
-| POST | `/` | ✅ | User | Submit application baru |
-| PUT | `/:id/status` | ✅ | Admin | Update status application |
+| POST | `/` | ✅ | User | Submit new application |
+| PUT | `/:id/status` | ✅ | Admin | Update application status |
 | DELETE | `/:id` | ✅ | All | Delete application |
 
 ### Chat (`/api/chat`)
 
-| Method | Endpoint | Auth | Deskripsi |
+| Method | Endpoint | Auth | Description |
 |--------|----------|------|-----------|
-| POST | `/` | ❌ | Chat dengan Gemini AI |
+| POST | `/` | ❌ | Chat with Gemini AI |
 | GET | `/test` | ❌ | Test Gemini connection |
 
 ---
 
 ## 🔄 Frontend Connection
 
-Backend ini dirancang untuk diakses oleh frontend yang berjalan di `http://localhost:5173` (default Vite dev server).
+This backend is designed to be accessed by frontend running at `http://localhost:5173` (default Vite dev server).
 
 ### CORS Configuration
-- Frontend URL diatur di `FRONTEND_URL` di `.env`
-- Backend automatically mengizinkan request dari frontend URL
-- JWT tokens dikirim via `Authorization` header
+- Frontend URL is configured via `FRONTEND_URL` in `.env`
+- Backend automatically allows requests from frontend URL
+- JWT tokens are sent via `Authorization` header
 
-### API Base URL di Frontend
+### API Base URL in Frontend
 ```typescript
-// Dari frontend, panggil API:
+// From frontend, call API:
 http://localhost:3001/api/...
 
-// Contoh:
+// Examples:
 POST http://localhost:3001/api/auth/login
 GET http://localhost:3001/api/positions
 ```
 
 ### Authentication Flow
 1. User login → POST `/api/auth/login`
-2. Backend return JWT token
-3. Frontend simpan token di localStorage/cookies
-4. Setiap request kirim token di header: `Authorization: Bearer <token>`
+2. Backend returns JWT token
+3. Frontend saves token in localStorage/cookies
+4. Each request sends token in header: `Authorization: Bearer <token>`
 
-Lihat [Frontend Service](../src/services/api.ts) untuk implementasi detail.
+See [Frontend Service](../src/services/api.ts) for implementation details.
 
 ---
 
 ## 🧪 Testing API
 
-### Menggunakan Browser
+### Using Browser
 
-Buka di browser:
+Open in browser:
 ```
 http://localhost:3001/api/positions
 ```
 
-### Menggunakan cURL
+### Using cURL
 
 **Get Positions:**
 ```bash
@@ -268,58 +274,58 @@ curl -X POST http://localhost:3001/api/auth/login \
 ```bash
 curl -X POST http://localhost:3001/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message":"Halo, bagaimana cara daftar magang?"}'
+  -d '{"message":"How to apply for internship?"}'
 ```
 
-### Menggunakan Postman
+### Using Postman
 
 1. Download [Postman](https://www.postman.com/downloads/)
-2. Import collection (bisa dibuat manual)
-3. Test semua endpoints
+2. Import collection (can be created manually)
+3. Test all endpoints
 
 ---
 
-## 📂 Struktur Folder
+## 📂 Folder Structure
 
 ```
 backend/
 ├── config/
-│   ├── database.js          # Konfigurasi PostgreSQL
-│   ├── gemini.js            # Konfigurasi Gemini AI
-│   └── initDatabase.js      # Script init DB
+│   ├── database.js          # PostgreSQL Configuration
+│   ├── gemini.js            # Gemini AI Configuration
+│   └── initDatabase.js      # Database Init Script
 ├── controllers/
-│   ├── authController.js    # Logic authentication
+│   ├── authController.js    # Authentication Logic
 │   ├── positionController.js
 │   ├── applicationController.js
 │   └── chatController.js
 ├── middleware/
-│   ├── auth.js              # JWT & authorization
-│   ├── upload.js            # Multer file upload
-│   └── validation.js        # Express validator
+│   ├── auth.js              # JWT & Authorization
+│   ├── upload.js            # Multer File Upload
+│   └── validation.js        # Express Validator
 ├── models/
 │   ├── User.js
 │   ├── Position.js
 │   ├── Application.js
-│   └── index.js             # Model associations
+│   └── index.js             # Model Associations
 ├── routes/
 │   ├── auth.js
 │   ├── positions.js
 │   ├── applications.js
 │   └── chat.js
-├── uploads/                 # Folder untuk file upload
-├── .env                     # Environment variables (jangan commit!)
-├── .env.example             # Template .env
-├── server.js                # Entry point
+├── uploads/                 # File Uploads Folder
+├── .env                     # Environment Variables (don't commit!)
+├── .env.example             # .env Template
+├── server.js                # Entry Point
 └── package.json
 ```
 
 ---
 
-## 🌐 Deployment ke VPS Hostinger
+## 🌐 Deployment to Hostinger VPS
 
-### 1. Persiapan VPS
+### 1. VPS Preparation
 
-Login ke VPS via SSH:
+Login to VPS via SSH:
 ```bash
 ssh root@your_vps_ip
 ```
@@ -331,7 +337,7 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
-Verifikasi:
+Verify:
 ```bash
 node --version
 npm --version
@@ -359,7 +365,7 @@ GRANT ALL PRIVILEGES ON DATABASE magang_pulogebang TO your_db_user;
 ### 4. Clone & Setup Project
 
 ```bash
-# Install Git (jika belum)
+# Install Git (if not installed)
 sudo apt install git
 
 # Clone repository
@@ -369,12 +375,12 @@ cd your-project/backend
 # Install dependencies
 npm install
 
-# Copy dan edit .env
+# Copy and edit .env
 cp .env.example .env
 nano .env
 ```
 
-Edit `.env` untuk production:
+Edit `.env` for production:
 ```env
 NODE_ENV=production
 PORT=3001
@@ -396,7 +402,7 @@ npm run init-db
 sudo npm install -g pm2
 ```
 
-### 7. Start Server dengan PM2
+### 7. Start Server with PM2
 
 ```bash
 pm2 start server.js --name magang-api
@@ -404,7 +410,7 @@ pm2 save
 pm2 startup
 ```
 
-Cek status:
+Check status:
 ```bash
 pm2 status
 pm2 logs magang-api
@@ -422,7 +428,7 @@ Create config:
 sudo nano /etc/nginx/sites-available/magang-api
 ```
 
-Paste konfigurasi:
+Paste configuration:
 ```nginx
 server {
     listen 80;
@@ -452,14 +458,14 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-### 9. Setup SSL (Optional tapi Recommended)
+### 9. Setup SSL (Optional but Recommended)
 
 Install Certbot:
 ```bash
 sudo apt install certbot python3-certbot-nginx
 ```
 
-Dapatkan SSL certificate:
+Get SSL certificate:
 ```bash
 sudo certbot --nginx -d api.yourdomain.com
 ```
@@ -478,36 +484,36 @@ sudo ufw enable
 
 ### Database connection failed
 
-**Cek PostgreSQL running:**
+**Check PostgreSQL is running:**
 ```bash
 # Windows
-services.msc → cari "postgresql"
+services.msc → search for "postgresql"
 
 # Mac/Linux
 sudo systemctl status postgresql
 ```
 
-**Test koneksi manual:**
+**Test connection manually:**
 ```bash
 psql -U postgres -d magang_pulogebang
 ```
 
-### Port sudah digunakan
+### Port already in use
 
-Ganti PORT di `.env`:
+Change PORT in `.env`:
 ```env
 PORT=3002
 ```
 
 ### Gemini API error
 
-- Cek API Key sudah benar
-- Cek quota di [Google AI Studio](https://ai.google.dev/)
-- Pastikan tidak ada typo di `.env`
+- Check API Key is correct
+- Check quota at [Google AI Studio](https://ai.google.dev/)
+- Make sure no typo in `.env`
 
 ### File upload error
 
-Pastikan folder `uploads/` ada dan writable:
+Make sure `uploads/` folder exists and is writable:
 ```bash
 mkdir -p uploads
 chmod 755 uploads
@@ -517,13 +523,13 @@ chmod 755 uploads
 
 ## 📞 Support
 
-Jika ada masalah:
-1. Cek logs: `pm2 logs magang-api` (production) atau console (development)
-2. Cek file `.env` sudah benar
-3. Cek PostgreSQL dan Gemini API sudah setup
+If you have issues:
+1. Check logs: `pm2 logs magang-api` (production) or console (development)
+2. Check `.env` file is correct
+3. Check PostgreSQL and Gemini API are set up
 
 ---
 
 ## 📝 License
 
-ISC
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for more information.

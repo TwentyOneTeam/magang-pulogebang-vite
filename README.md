@@ -29,7 +29,9 @@
 
 ---
 
-**📚 Language:** **English** | [Bahasa Indonesia](README.id.md)
+<p align="center">
+  <strong>📚 Language:</strong> <strong>English</strong> | <a href="README.id.md">Bahasa Indonesia</a>
+</p>
 
 ---
 
@@ -159,7 +161,7 @@ npm run dev
 **Terminal 2 - Frontend:**
 ```bash
 npm run dev
-# Open browser: http://localhost:5173
+# Open browser: http://localhost:3000
 ```
 
 ### 📦 Building for Production
@@ -241,6 +243,8 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for more 
 
 - [Vite](https://vite.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [React](https://react.dev/)
+- [TailwindCSS](https://tailwindcss.com/)
 - And all contributors who help improve this project.
 
 <p align="center">

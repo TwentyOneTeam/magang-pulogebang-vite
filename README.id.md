@@ -29,7 +29,9 @@
 
 ---
 
-**📚 Versi Bahasa:** [English](README.md) | **Bahasa Indonesia**
+<p align="center">
+  <strong>📚 Bahasa:</strong> <a href="README.md">English</a> | <strong>Bahasa Indonesia</strong>
+</p>
 
 ---
 
@@ -158,7 +160,7 @@ npm run dev
 **Terminal 2 - Frontend:**
 ```bash
 npm run dev
-# Buka browser: http://localhost:5173
+# Buka browser: http://localhost:3000
 ```
 
 ### 📦 Build untuk Production
