@@ -2,7 +2,7 @@
 
 Backend API menggunakan **Express.js**, **PostgreSQL**, dan **Gemini AI**.
 
-> 📚 For full project context, see [Main README](../README.md) | [README Bahasa Indonesia](../README.id.md)
+> 📚 Untuk konteks proyek lengkap, lihat [README utama](../README.id.md) | [Main README (English)](../README.md)
 
 ## 📋 Daftar Isi
 
@@ -10,7 +10,7 @@ Backend API menggunakan **Express.js**, **PostgreSQL**, dan **Gemini AI**.
 - [Konfigurasi](#konfigurasi)
 - [Menjalankan Server](#menjalankan-server)
 - [API Endpoints](#api-endpoints)
-- [Frontend Connection](#frontend-connection)
+- [Koneksi Frontend](#koneksi-frontend)
 - [Testing](#testing)
 - [Deployment](#deployment)
 
@@ -212,7 +212,7 @@ npm start
 
 ---
 
-## 🔄 Frontend Connection
+## 🔄 Koneksi Frontend
 
 Backend ini dirancang untuk diakses oleh frontend yang berjalan di `http://localhost:5173` (default Vite dev server).
 
@@ -224,7 +224,7 @@ Backend ini dirancang untuk diakses oleh frontend yang berjalan di `http://local
 ### API Base URL di Frontend
 ```typescript
 // Dari frontend, panggil API:
-http://localhost:3001/api/...
+https://localhost:3001/api/...
 
 // Contoh:
 POST http://localhost:3001/api/auth/login

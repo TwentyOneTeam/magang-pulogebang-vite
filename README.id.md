@@ -3,14 +3,14 @@
 <p align="center">
   <img src=".github/assets/twentyonelogo.png" alt="TwentyOne Logo" width="200">
 </p>
-<h4 align="center">by TwentyOne Team</h4>
+<h4 align="center">oleh TwentyOne Team</h4>
 
 <p align="center">
   <a href="https://maps.app.goo.gl/7KvGrbhztdbDVZbz6">
-    <img src="https://img.shields.io/badge/Location-Pulo%20Gebang-green?style=for-the-badge&logo=googlemaps&logoColor=white" alt="Alamat Kelurahan Pulo Gebang"/>
+    <img src="https://img.shields.io/badge/Lokasi-Pulo%20Gebang-green?style=for-the-badge&logo=googlemaps&logoColor=white" alt="Alamat Kelurahan Pulo Gebang"/>
   </a>
   <a href="">
-    <img src="https://img.shields.io/badge/Website-Visit-blue?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website URL"/>
+    <img src="https://img.shields.io/badge/Website-Kunjungi-blue?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website URL"/>
   </a>
   <a href="https://vitejs.dev/">
     <img src="https://img.shields.io/badge/Vite-7.2.4-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"/>
@@ -19,50 +19,49 @@
     <img src="https://img.shields.io/badge/TypeScript-TSX-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript (TSX)"/>
   </a>
   <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License"/>
+    <img src="https://img.shields.io/badge/Lisensi-MIT-yellow?style=for-the-badge" alt="MIT License"/>
   </a>
 </p>
 
 <p align="center">
-  Front-end website for the Internship Information System at Kelurahan Pulo Gebang.
+  Aplikasi front-end untuk Sistem Informasi Magang di Kelurahan Pulo Gebang.
 </p>
 
 ---
 
-**📚 Language:** **English** | [Bahasa Indonesia](README.id.md)
+**📚 Versi Bahasa:** [English](README.md) | **Bahasa Indonesia**
 
 ---
 
-## 📋 Table of Contents
-- [📖 About](#-about)
-- [✨ Features](#-features)
+## 📋 Daftar Isi
+- [📖 Tentang](#-tentang)
+- [✨ Fitur](#-fitur)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
-- [🏗️ System Architecture](#%EF%B8%8F-system-architecture)
-- [🚀 Getting Started](#-getting-started)
-  - [🔎 Prerequisites](#-prerequisites)
-  - [💾 Installation](#-installation)
-  - [💻 Running Locally](#-running-locally)
-- [📂 Project Structure](#-project-structure)
+- [🏗️ Arsitektur Sistem](#%EF%B8%8F-arsitektur-sistem)
+- [🚀 Memulai](#-memulai)
+  - [🔎 Prasyarat](#-prasyarat)
+  - [💾 Instalasi](#-instalasi)
+  - [💻 Menjalankan Lokal](#-menjalankan-lokal)
+- [📂 Struktur Proyek](#-struktur-proyek)
 - [🖼️ Screenshots](#%EF%B8%8F-screenshots)
-- [📚 Documentation](#-documentation)
-- [🤝 Contributing](#-contributing)
-- [⚖️ License](#%EF%B8%8F-license)
-- [🙏 Acknowledgements](#-acknowledgements)
+- [🤝 Kontribusi](#-kontribusi)
+- [⚖️ Lisensi](#%EF%B8%8F-lisensi)
+- [🙏 Ucapan Terima Kasih](#-ucapan-terima-kasih)
 
 ---
 
-## 📖 About
+## 📖 Tentang
 
-**magang-pulogebang-vite** is a modern front-end application designed for the Internship Information System (Sistem Informasi Magang) of Kelurahan Pulo Gebang. Built with TypeScript and Vite, this project offers a fast and smooth development experience for both contributors and users. The system helps candidates easily register and track their internship applications in Kelurahan Pulo Gebang.
+**magang-pulogebang-vite** adalah aplikasi front-end modern yang dirancang untuk Sistem Informasi Magang (SIM) Kelurahan Pulo Gebang. Dibangun dengan TypeScript dan Vite, proyek ini menawarkan pengalaman pengembangan yang cepat dan lancar bagi kontributor dan pengguna. Sistem ini membantu calon peserta magang untuk mudah mendaftar dan melacak status aplikasi magang mereka di Kelurahan Pulo Gebang.
 
 ---
 
-## ✨ Features
+## ✨ Fitur
 
-- User-friendly registration and application process
-- Responsive UI design for mobile and desktop
-- Dashboard for applicants to monitor their application status
-- Integrated chatbot for instant support and information
+- Proses registrasi dan aplikasi yang ramah pengguna
+- Desain UI responsif untuk mobile dan desktop
+- Dashboard untuk pelamar memantau status aplikasi mereka
+- Chatbot terintegrasi untuk dukungan instan dan informasi
 
 ---
 
@@ -79,11 +78,11 @@
 - **PostgreSQL** (Database)
 - **Gemini AI** (Chatbot)
 
-For in-depth backend documentation, see [Backend README](backend/README.md).
+Untuk detail lengkap backend, lihat [Backend README](backend/README.id.md).
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Arsitektur Sistem
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -113,17 +112,17 @@ For in-depth backend documentation, see [Backend README](backend/README.md).
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Memulai
 
-Follow these instructions to set up the project locally.
+Ikuti petunjuk ini untuk menyiapkan proyek secara lokal.
 
-### 🔎 Prerequisites
+### 🔎 Prasyarat
 
-- [Node.js](https://nodejs.org/) (v16 or later recommended)
-- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
-- [PostgreSQL](https://www.postgresql.org/) (for backend)
+- [Node.js](https://nodejs.org/) (v16 atau lebih baru direkomendasikan)
+- [npm](https://www.npmjs.com/) atau [Yarn](https://yarnpkg.com/)
+- [PostgreSQL](https://www.postgresql.org/) (untuk backend)
 
-### 💾 Installation
+### 💾 Instalasi
 
 **1. Clone Repository:**
 ```bash
@@ -131,60 +130,60 @@ git clone https://github.com/TwentyOneTeam/magang-pulogebang-vite.git
 cd magang-pulogebang-vite
 ```
 
-**2. Install Frontend Dependencies:**
+**2. Install Dependencies Frontend:**
 ```bash
 npm install
-# or
+# atau
 yarn install
 ```
 
-**3. Setup Backend (see [Backend README](backend/README.md)):**
+**3. Setup Backend (lihat [Backend README](backend/README.id.md)):**
 ```bash
 cd backend
 npm install
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env dengan konfigurasi Anda
 npm run init-db
 ```
 
-### 💻 Running Locally
+### 💻 Menjalankan Lokal
 
 **Terminal 1 - Backend:**
 ```bash
 cd backend
 npm run dev
-# Backend server: http://localhost:3001
+# Server backend: http://localhost:3001
 ```
 
 **Terminal 2 - Frontend:**
 ```bash
 npm run dev
-# Open browser: http://localhost:5173
+# Buka browser: http://localhost:5173
 ```
 
-### 📦 Building for Production
+### 📦 Build untuk Production
 
 ```bash
 npm run build
-# or
+# atau
 yarn build
 ```
-The optimized build output will be in the `dist/` folder.
+Output yang dioptimalkan akan berada di folder `dist/`.
 
 ---
 
-## 📂 Project Structure
+## 📂 Struktur Proyek
 
 ```
 magang-pulogebang-vite/
-├── src/                          # Frontend code
+├── src/                          # Kode frontend
 │   ├── components/               # React components
 │   ├── services/                 # API services
 │   ├── styles/                   # Global styles
 │   ├── App.tsx                   # Root component
 │   └── main.tsx                  # Entry point
-├── backend/                      # Backend code
-│   ├── config/                   # Configuration
+├── backend/                      # Kode backend
+│   ├── config/                   # Konfigurasi
 │   ├── controllers/              # Business logic
 │   ├── middleware/               # Express middleware
 │   ├── models/                   # Database models
@@ -192,19 +191,12 @@ magang-pulogebang-vite/
 │   ├── uploads/                  # File uploads
 │   └── server.js                 # Entry point
 ├── public/                       # Static assets
-├── README.md                     # Documentation (English)
-├── README.id.md                  # Documentation (Indonesian)
+├── README.md                     # Dokumentasi English
+├── README.id.md                  # Dokumentasi Indonesia
 ├── vite.config.ts                # Vite configuration
 ├── tsconfig.json                 # TypeScript configuration
 └── package.json                  # Dependencies
 ```
-
----
-
-## 📚 Documentation
-
-- **[Backend Documentation](backend/README.md)** - API setup, database configuration, deployment guide
-- **[Backend Dokumentasi (ID)](backend/README.id.md)** - Dokumentasi backend dalam Bahasa Indonesia
 
 ---
 
@@ -219,30 +211,32 @@ magang-pulogebang-vite/
 
 ---
 
-## 🤝 Contributing
+## 🤝 Kontribusi
 
-Contributions are welcome! To contribute:
+Kontribusi sangat diterima! Untuk berkontribusi:
 
-1. Fork this repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
----
-
-## ⚖️ License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
+1. Fork repository ini
+2. Buat branch baru (`git checkout -b feature/fitur-anda`)
+3. Commit perubahan Anda (`git commit -m 'Tambahkan fitur'`)
+4. Push ke branch (`git push origin feature/fitur-anda`)
+5. Buka Pull Request
 
 ---
 
-## 🙏 Acknowledgements
+## ⚖️ Lisensi
+
+Proyek ini dilisensikan di bawah MIT License. Lihat [LICENSE](LICENSE) untuk informasi lebih lanjut.
+
+---
+
+## 🙏 Ucapan Terima Kasih
 
 - [Vite](https://vite.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
-- And all contributors who help improve this project.
+- [React](https://react.dev/)
+- [TailwindCSS](https://tailwindcss.com/)
+- Dan semua kontributor yang membantu meningkatkan proyek ini.
 
 <p align="center">
-  Made with ❤️ by the <b>TwentyOne Team</b>!
+  Dibuat dengan ❤️ oleh <b>TwentyOne Team</b>!
 </p>
