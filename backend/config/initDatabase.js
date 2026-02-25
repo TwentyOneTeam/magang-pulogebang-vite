@@ -33,7 +33,7 @@ const initDatabase = async () => {
 
     // Create default admin user
     console.log('\n3️⃣  Creating default admin user...');
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@pulogebang.go.id';
+    const adminEmail = process.env.ADMIN_EMAIL;
     
     const existingAdmin = await User.findOne({ where: { email: adminEmail } });
     
@@ -41,11 +41,11 @@ const initDatabase = async () => {
       console.log(`⚠️  Admin user already exists: ${adminEmail}`);
     } else {
       await User.create({
-        name: process.env.ADMIN_NAME || 'Administrator Kelurahan',
+        name: process.env.ADMIN_NAME,
         email: adminEmail,
-        password: process.env.ADMIN_PASSWORD || 'Admin123!',
+        password: process.env.ADMIN_PASSWORD,
         role: 'admin',
-        phone: '(021) 1234-5678',
+        phone: '085280471981',
         isActive: true,
         isVerified: true, // Admin langsung verified
         otpCode: null,
@@ -54,7 +54,7 @@ const initDatabase = async () => {
         resetOtpExpiresAt: null
       });
       console.log(`✅ Admin user created: ${adminEmail}`);
-      console.log(`   Password: ${process.env.ADMIN_PASSWORD || 'Admin123!'}`);
+      console.log(`   Password: ${process.env.ADMIN_PASSWORD}`);
       console.log('   ⚠️  PENTING: Segera ubah password setelah login pertama kali!');
     }
 
@@ -147,7 +147,7 @@ const initDatabase = async () => {
     console.log('\n✅ Database initialization completed successfully!');
     console.log('\n📝 Summary:');
     console.log(`   - Admin Email: ${adminEmail}`);
-    console.log(`   - Admin Password: ${process.env.ADMIN_PASSWORD || 'Admin123!'}`);
+    console.log(`   - Admin Password: ${process.env.ADMIN_PASSWORD}`);
     console.log(`   - Sample Positions: ${samplePositions.length} positions created`);
     console.log('\n🚀 You can now start the server with: npm run dev\n');
 
