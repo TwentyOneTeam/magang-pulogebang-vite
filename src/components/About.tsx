@@ -75,7 +75,7 @@ export function About() {
                 <h2 className="text-[#004AAD] text-3xl md:text-4xl font-bold mb-6">Tentang Proyek Ini</h2>
                 <div className="space-y-4 text-gray-700">
                   <p className="leading-relaxed text-base md:text-lg text-justify">
-                    Website ini adalah sistem informasi magang yang kami bangun sebagai tugas mata kuliah <span className="font-semibold text-[#004AAD]">Pengelolaan Proyek Perangkat Lunak</span> pada semester 7.
+                    Website ini adalah Sistem Informasi Magang yang kami bangun sebagai tugas mata kuliah <span className="font-semibold text-[#004AAD]">Pengelolaan Proyek Perangkat Lunak</span> pada semester 7.
                   </p>
                   <p className="leading-relaxed text-base md:text-lg text-justify">
                     Dirancang untuk memudahkan calon peserta magang mendapatkan informasi, melakukan pendaftaran, dan memantau status pengajuan mereka dengan mudah dan real-time.

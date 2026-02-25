@@ -154,7 +154,7 @@ const startServer = async () => {
     // Start listening
     app.listen(PORT, () => {
       console.log('\n✅ Server is running!');
-      console.log(`📍 Local:            http://localhost:${PORT}`);
+      console.log(`📍 Local:           http://localhost:${PORT}`);
       console.log(`🌍 Network:         http://0.0.0.0:${PORT}`);
       console.log(`📝 Environment:     ${process.env.NODE_ENV || 'development'}`);
       console.log(`💾 Database:        PostgreSQL (${process.env.DB_NAME})`);

@@ -32,7 +32,23 @@ const request = async (endpoint: string, options: RequestInit = {}) => {
       },
     });
 
-    const data = await response.json();
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    let data: any;
+    
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      // Response bukan JSON (possibly HTML error page)
+      const text = await response.text();
+      console.error('Response is not JSON:', text.substring(0, 200));
+      
+      throw new Error(
+        `Server returned non-JSON response (${response.status}). ` +
+        `API URL mungkin salah atau server sedang error. ` +
+        `Configuration: ${API_BASE_URL}${endpoint}`
+      );
+    }
 
     if (!response.ok) {
       const error = new Error(data.message || 'Request failed');
@@ -60,7 +76,7 @@ export const authAPI = {
     password: string;
     phone?: string;
   }) => {
-    const response = await request('/auth/register', {
+    const response = await request('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     });
@@ -81,7 +97,7 @@ export const authAPI = {
 
   // Verify OTP
   verifyOTP: async (data: { email: string; otpCode: string }) => {
-    const response = await request('/auth/verify-otp', {
+    const response = await request('/api/auth/verify-otp', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -97,7 +113,7 @@ export const authAPI = {
 
   // Resend OTP
   resendOTP: async (data: { email: string }) => {
-    return request('/auth/resend-otp', {
+    return request('/api/auth/resend-otp', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -105,7 +121,7 @@ export const authAPI = {
 
   // Forgot password - request reset OTP
   forgotPassword: async (data: { email: string }) => {
-    return request('/auth/forgot-password', {
+    return request('/api/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -113,7 +129,7 @@ export const authAPI = {
 
   // Reset password with OTP
   resetPassword: async (data: { email: string; resetOtp: string; newPassword: string; confirmPassword: string }) => {
-    const response = await request('/auth/reset-password', {
+    const response = await request('/api/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -129,7 +145,7 @@ export const authAPI = {
 
   // Login
   login: async (credentials: { email: string; password: string }) => {
-    const response = await request('/auth/login', {
+    const response = await request('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
@@ -151,14 +167,14 @@ export const authAPI = {
 
   // Get current user
   getMe: async () => {
-    return request('/auth/me', {
+    return request('/api/auth/me', {
       method: 'GET',
     });
   },
 
   // Update profile
   updateProfile: async (profileData: { name?: string; phone?: string }) => {
-    return request('/auth/profile', {
+    return request('/api/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData),
     });
@@ -169,7 +185,7 @@ export const authAPI = {
     currentPassword: string;
     newPassword: string;
   }) => {
-    return request('/auth/change-password', {
+    return request('/api/auth/change-password', {
       method: 'PUT',
       body: JSON.stringify(passwordData),
     });
@@ -193,21 +209,21 @@ export const positionsAPI = {
     if (filters?.department) params.append('department', filters.department);
 
     const queryString = params.toString();
-    return request(`/positions${queryString ? `?${queryString}` : ''}`, {
+    return request(`/api/positions${queryString ? `?${queryString}` : ''}`, {
       method: 'GET',
     });
   },
 
   // Get position by ID
   getById: async (id: string) => {
-    return request(`/positions/${id}`, {
+    return request(`/api/positions/${id}`, {
       method: 'GET',
     });
   },
 
   // Create position (admin only)
   create: async (positionData: any) => {
-    return request('/positions', {
+    return request('/api/positions', {
       method: 'POST',
       body: JSON.stringify(positionData),
     });
@@ -215,7 +231,7 @@ export const positionsAPI = {
 
   // Update position (admin only)
   update: async (id: string, positionData: any) => {
-    return request(`/positions/${id}`, {
+    return request(`/api/positions/${id}`, {
       method: 'PUT',
       body: JSON.stringify(positionData),
     });
@@ -223,14 +239,14 @@ export const positionsAPI = {
 
   // Delete position (admin only)
   delete: async (id: string) => {
-    return request(`/positions/${id}`, {
+    return request(`/api/positions/${id}`, {
       method: 'DELETE',
     });
   },
 
   // Toggle active status (admin only)
   toggleActive: async (id: string) => {
-    return request(`/positions/${id}/toggle-active`, {
+    return request(`/api/positions/${id}/toggle-active`, {
       method: 'PATCH',
     });
   },
@@ -253,14 +269,14 @@ export const applicationsAPI = {
     if (filters?.positionId) params.append('positionId', filters.positionId);
 
     const queryString = params.toString();
-    return request(`/applications${queryString ? `?${queryString}` : ''}`, {
+    return request(`/api/applications${queryString ? `?${queryString}` : ''}`, {
       method: 'GET',
     });
   },
 
   // Get application by ID
   getById: async (id: string) => {
-    return request(`/applications/${id}`, {
+    return request(`/api/applications/${id}`, {
       method: 'GET',
     });
   },
@@ -268,7 +284,7 @@ export const applicationsAPI = {
   // Create application with file upload
   create: async (formData: FormData) => {
     const token = getToken();
-    const url = `${API_BASE_URL}/applications`;
+    const url = `${API_BASE_URL}/api/applications`;
 
     try {
       const response = await fetch(url, {
@@ -299,7 +315,7 @@ export const applicationsAPI = {
     status: string,
     adminNotes?: string
   ) => {
-    return request(`/applications/${id}/status`, {
+    return request(`/api/applications/${id}/status`, {
       method: 'PUT',
       body: JSON.stringify({ status, adminNotes }),
     });
@@ -307,14 +323,14 @@ export const applicationsAPI = {
 
   // Delete application
   delete: async (id: string) => {
-    return request(`/applications/${id}`, {
+    return request(`/api/applications/${id}`, {
       method: 'DELETE',
     });
   },
 
   // Get statistics (admin only)
   getStats: async () => {
-    return request('/applications/stats', {
+    return request('/api/applications/stats', {
       method: 'GET',
     });
   },
@@ -327,7 +343,7 @@ export const applicationsAPI = {
 export const chatAPI = {
   // Send message to chatbot
   sendMessage: async (message: string, conversationHistory?: any[]) => {
-    return request('/chat', {
+    return request('/api/chat', {
       method: 'POST',
       body: JSON.stringify({ message, conversationHistory }),
     });
@@ -335,7 +351,7 @@ export const chatAPI = {
 
   // Test Gemini connection
   testConnection: async () => {
-    return request('/chat/test', {
+    return request('/api/chat/test', {
       method: 'GET',
     });
   },

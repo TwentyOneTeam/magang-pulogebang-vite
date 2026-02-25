@@ -21,6 +21,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   loading: boolean;
+  isInitializing: boolean;
   error: string | null;
 }
 
@@ -31,7 +32,8 @@ const SESSION_TIMEOUT = 30 * 60 * 1000;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
 
@@ -48,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (err) {
         console.error('Error loading user:', err);
       } finally {
-        setLoading(false);
+        setIsInitializing(false);
       }
     };
 
@@ -232,6 +234,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: user !== null,
     isAdmin: user?.role === 'admin',
     loading,
+    isInitializing,
     error,
   };
 
