@@ -226,7 +226,7 @@ export function InternshipInfo() {
 
                     <Button
                       className="w-full bg-[#004AAD] hover:bg-[#003580]"
-                      onClick={() => navigate('/registration')}
+                      onClick={() => navigate('/pendaftaran')}
                     >
                       Daftar Sekarang
                       <ArrowRight className="ml-2 w-4 h-4" />
