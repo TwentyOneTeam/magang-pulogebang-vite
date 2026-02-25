@@ -145,3 +145,7 @@ dist-ssr
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Backend uploads folder (ignore all user uploaded files)
+backend/uploads/
+!backend/uploads/.gitkeep

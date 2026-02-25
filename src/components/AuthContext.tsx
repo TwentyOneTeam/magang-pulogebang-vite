@@ -1,3 +1,4 @@
+// @refresh reset
 import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react';
 import { authAPI, getCurrentUser, isAuthenticated as checkAuth } from '../services/api';
 
